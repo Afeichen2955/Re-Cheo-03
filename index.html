@@ -1,0 +1,56 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    <style>
+      body { margin: 0; overflow: hidden; }
+      /* 跳转按钮样式 */
+      #link-button {
+        position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+        padding: 10px 20px; background: #ff4400; color: white;
+        border: none; border-radius: 5px; display: none; z-index: 999;
+        cursor: pointer; font-family: sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="link-button">了解更多戏曲知识</button>
+
+    <a-scene mindar-image="imageTargetSrc: ./assets/targets.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+      <a-assets>
+        <video id="lao-video" src="./287.mp4" preload="auto" loop="true"></video>
+      </a-assets>
+
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+      <a-entity id="example-target" mindar-image-target="targetIndex: 0">
+        <a-video src="#lao-video" width="1" height="0.55" position="0 0 0"></a-video>
+      </a-entity>
+    </a-scene>
+
+    <script>
+      const targetEl = document.querySelector('#example-target');
+      const videoEl = document.querySelector('#lao-video');
+      const buttonEl = document.querySelector('#link-button');
+
+      // 监听识别成功事件
+      targetEl.addEventListener("targetFound", event => {
+        console.log("识别成功！");
+        videoEl.play(); // 播放视频
+        buttonEl.style.display = "block"; // 显示跳转按钮
+      });
+
+      // 监听丢失目标事件
+      targetEl.addEventListener("targetLost", event => {
+        videoEl.pause(); // 暂停视频
+        buttonEl.style.display = "none";
+      });
+
+      // 点击按钮跳转网站
+      buttonEl.addEventListener('click', () => {
+        window.location.href = "https://afeichen2955.github.io/yifeichen.website/";
+      });
+    </script>
+  </body>
+</html>
